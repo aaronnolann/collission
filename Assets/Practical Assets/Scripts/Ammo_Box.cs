@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Ammo_Box : MonoBehaviour
 {
-    int currentAmmo;
+    public int currentAmmo;
+    GameObject ammobox;
     RaycastHit result;
-
+    Renderer test; 
 
     void Start()
     {
@@ -16,10 +17,11 @@ public class Ammo_Box : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetButtonDown("leftClick"))
-            {
+        if (Input.GetButtonDown("leftClick") && currentAmmo>0)
+        {
             Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
             Physics.Raycast(ray, out result);
+            currentAmmo--;
             if (result.collider.gameObject.name == "Target")
             {
                 GameObject t = result.collider.gameObject;
@@ -27,7 +29,12 @@ public class Ammo_Box : MonoBehaviour
                 a.Play("LowerBridge");
             }
         }
-   
+        if (currentAmmo == 0)
+        {
+            ammobox = GameObject.Find("AmmoBox");
+            //test = ammobox.GetComponent<MeshRenderer>();
+            //test.enabled = true;
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -38,8 +45,9 @@ public class Ammo_Box : MonoBehaviour
             Debug.Log("Debug:");
             currentAmmo = 20;
             Debug.Log(currentAmmo);
-            other.gameObject.SetActive(false);
-        }
+            test= other.gameObject.GetComponent<MeshRenderer>();
+            test.enabled = false;
+        } 
     }
         
 }
